@@ -21,7 +21,6 @@ def tweet(msg):
     # Authorize the account
     twitter = Twython(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
     # Update the status and store result in callback
-    print CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
     print twitter.update_status(status=msg)
 
 

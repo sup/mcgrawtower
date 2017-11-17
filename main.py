@@ -16,23 +16,26 @@ ACCESS_TOKEN_SECRET=os.environ.get('ACCESS_TOKEN_SECRET')
 sched = BlockingScheduler()
 
 
-# Update the Twitter account
-def tweet(msg):
-    # Authorize the account
-    twitter = Twython(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-    # Update the status and store result in callback
-    print twitter.update_status(status=msg)
-
-
 @sched.scheduled_job('cron', minute=0)
 def main():
-    # Generate the status
+    print "Scheduled job running..."
+
+    # Generate the status that mcgrawtower will tweet
     tz = pytz.timezone("US/Eastern")
     dt = datetime.datetime.now(tz)
     hour = dt.hour % 12
     if hour == 0:
         hour = 12
     msg = "CHIME " * hour
-    tweet(msg)
+
+    # Tweet the message out
+    twitter = Twython(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+    try:
+        result = twitter.update_status(status=msg)
+        print result
+    except Exception as e:
+        print e
+    finally:
+        print "Done."
 
 sched.start()
